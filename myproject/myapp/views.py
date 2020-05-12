@@ -7,6 +7,9 @@ def hello(request):
 
 # Create your views here.
 
-def viewArticle(request, articleId):
-   text = f"Displaying article Number : {articleId}"
-   return HttpResponse(text)
+def viewArticle(request, articleId=None,year=None,month=None):
+    if  articleId:
+        text = f"Displaying article Number : {articleId}"
+    else:
+        text = f"Displaying articles of year month: {year}/{month}/"
+    return HttpResponse(text)
