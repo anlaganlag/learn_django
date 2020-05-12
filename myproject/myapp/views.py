@@ -6,3 +6,7 @@ def hello(request):
     return HttpResponse(text)
 
 # Create your views here.
+
+def viewArticle(request, articleId):
+   text = f"Displaying article Number : {articleId}"
+   return HttpResponse(text)
