@@ -9,18 +9,10 @@ def index(request, pid):
     except:
         return HttpResponse(f"<p>status: error</p> <p>message: pizza_id={pid} not found</p>")
 
-def random(request):
-    try:
-        pid = randint(1,6)
-        pizza = Pizza.objects.get(id=pid)
-        return HttpResponse( f" <p>id: {pizza.id}</p> <p>title: {pizza.title}</p><p> description: {pizza.description}</p>" )
-    except:
-        return HttpResponse(f"<p>status: error</p> <p>message: pizza_id={pid} not found</p>")
 
-def randoms(request,random_times=10):
+def randoms(request,random_times=1):
     text = ""
     object_nums = len(Pizza.objects.all())
-    # pid_list = set( [sample(1,object_nums) for i in range (random_times)])
     if random_times>object_nums:
         text+=f"您選擇的隨機的次數{random_times}!<br>大於當前存在的pizza數量{object_nums},<br>故只隨機顯示{object_nums}個pizza!!"
         random_times =object_nums
