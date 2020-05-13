@@ -73,6 +73,15 @@ def logged(request):
     return  HttpResponse("Have successful logged in!")
 
 
+class GetTenPizzasView(View):
+    template_name = 'ten_pizzas.html'
+
+    def get(self, request):
+        pizzas = Pizza.objects.order_by('?')[:10]
+        return render(request, self.template_name, {'pizzas': pizzas})
+
+
+
     
 
     
