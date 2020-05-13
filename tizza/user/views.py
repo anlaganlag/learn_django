@@ -15,6 +15,6 @@ class SignupView(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request,user) 
-            return redirect('/admin/')
+            return redirect('/pizzas/randoms')
     def get(self,request):
         return  render(request,self.template_name,{'form':UserCreationForm()})
