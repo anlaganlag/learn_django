@@ -26,6 +26,8 @@ def randoms(request,random_times=1):
     return HttpResponse(text)
 
     
+def logged(request):
+    return  HttpResponse("Have successful logged in!")
 
 
     

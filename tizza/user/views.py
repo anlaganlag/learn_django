@@ -1,5 +1,6 @@
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.views import View
 
@@ -15,6 +16,8 @@ class SignupView(View):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request,user) 
-            return redirect('/pizzas/randoms')
+            return HttpResponse("Wecllcom You,auth done!")
+            # return redirect('/pizzas/randoms')
+
     def get(self,request):
         return  render(request,self.template_name,{'form':UserCreationForm()})
