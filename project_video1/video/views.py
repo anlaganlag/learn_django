@@ -1,7 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render,get_object_or_404
 from django.views import generic
+from django.views.decorators.http import require_http_methods
+
+from .forms import CommentForm
 from .models import Video,Classification
-from helpers import get_page_list
+from helpers import get_page_list,ajax_required
 
 
 class IndexView(generic.ListView):
@@ -49,4 +53,45 @@ class SearchListView(generic.ListView):
         context['page_list'] = page_list
         context['q'] = self.q
         return context
-        
+
+class VideoDetailView(generic.DetailView):
+    model = Video
+    template_name = 'video/detail.html'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object()
+        obj.increase_view_count()  # 调用自增函数
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(VideoDetailView, self).get_context_data(**kwargs)
+        form = CommentForm()
+        recommend_list = Video.objects.get_recommend_list()
+        context['form'] = form
+        context['recommend_list'] = recommend_list
+        return context
+
+
+@ajax_required
+@require_http_methods(["POST"])
+def like(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 1, "msg": "請先登錄"})
+    video_id = request.POST['video_id']
+    video = Video.objects.get(pk=video_id)
+    user = request.user
+    video.switch_like(user)
+    return JsonResponse({"code": 0, "likes": video.count_likers(), "user_liked": video.user_liked(user)})
+
+
+@ajax_required
+@require_http_methods(["POST"])
+def collect(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 1, "msg": "璇峰厛鐧诲綍"})
+    video_id = request.POST['video_id']
+    video = Video.objects.get(pk=video_id)
+    user = request.user
+    video.switch_collect(user)
+    return JsonResponse({"code": 0, "collects": video.count_collecters(), "user_collected": video.user_collected(user)})
+

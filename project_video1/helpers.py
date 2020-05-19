@@ -1,5 +1,7 @@
-def get_page_list(paginator, page):
 
+from django.http import HttpResponseBadRequest, HttpResponse
+
+def get_page_list(paginator, page):
     page_list = []
 
     if paginator.num_pages > 10:
@@ -17,3 +19,16 @@ def get_page_list(paginator, page):
             page_list.append(i)
 
     return page_list
+
+
+def ajax_required(f):
+    """Not a mixin, but a nice decorator to validate than a request is AJAX"""
+    def wrap(request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponseBadRequest()
+
+        return f(request, *args, **kwargs)
+
+    wrap.__doc__ = f.__doc__
+    wrap.__name__ = f.__name__
+    return wrap

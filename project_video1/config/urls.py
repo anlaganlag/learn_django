@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('video/',include('video.urls')),
     path('users/',include('users.urls')),
+    path('comment/',include('comment.urls')),
     path('', views.IndexView.as_view(), name='home'), 
 ]

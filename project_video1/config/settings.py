@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'video',
     'users',
+    'comment',
     'sorl.thumbnail',
 ]
 
