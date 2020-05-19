@@ -1,0 +1,17 @@
+<form class="ui large form" novalidate method="post" action="{% url 'users:signup' %}" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class="ui stacked segment">
+                <div class="field"> 
+                    {{form.username}} 
+                </div>
+                <div class="field"> 
+                    {{form.password1}} 
+                </div>
+                <div class="field"> 
+                    {{form.password2}} 
+                </div>
+                <button class="ui submit button" type="submit">注册</button>
+            </div>
+            {% include "base/form_errors.html" %}
+        </form>
+
