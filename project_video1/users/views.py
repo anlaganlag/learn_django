@@ -12,7 +12,7 @@ from django import forms
 from .forms import SignUpForm,UserLoginForm,ProfileForm,FeedbackForm,ChangePwdForm,SubscribeForm
 from django.views  import generic
 from django.contrib.auth.mixins  import LoginRequiredMixin
-from helpers import   AuthorRequiredMixin,get_page_list
+from helpers import   AuthorRequiredMixin,get_page_list,SuperUserRequiredMixin
 from  .models import User,Feedback
 
 
@@ -154,3 +154,40 @@ class LikeListView(generic.ListView):
         user = get_object_or_404(User, pk=self.kwargs.get('pk'))
         videos = user.liked_videos.all()
         return videos
+
+class VideoListView(AdminUserRequiredMixin, generic.ListView):
+    model = Video
+    template_name = 'myadmin/video_list.html'
+    context_object_name = 'video_list'
+    paginate_by = 10
+    q = ''
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(VideoListView, self).get_context_data(**kwargs)
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        page_list = get_page_list(paginator, page)
+        context['page_list'] = page_list
+        context['q'] = self.q
+        return context
+
+    def get_queryset(self):
+        self.q = self.request.GET.get("q", "")
+        return Video.objects.get_search_list(self.q)
+
+
+class VideoEditView(SuperUserRequiredMixin, generic.UpdateView):
+    model = Video
+    form_class = VideoEditForm
+    template_name = 'myadmin/video_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(VideoEditView, self).get_context_data(**kwargs)
+        clf_list = Classification.objects.all().values()
+        clf_data = {'clf_list':clf_list}
+        context.update(clf_data)
+        return context
+
+    def get_success_url(self):
+        messages.success(self.request, "保存成功")
+        return reverse('myadmin:video_edit', kwargs={'pk': self.kwargs['pk']})

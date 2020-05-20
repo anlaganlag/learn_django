@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'video',
     'users',
     'comment',
+    'myadmin',
     'sorl.thumbnail',
 ]
 

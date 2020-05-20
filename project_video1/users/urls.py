@@ -12,4 +12,6 @@ urlpatterns = [
     path('feedback/', views.FeedbackView.as_view(), name='feedback'),
     path('<int:pk>/collect_videos/', views.CollectListView.as_view(), name='collect_videos'),
     path('<int:pk>/like_videos/', views.LikeListView.as_view(), name='like_videos'),
+    path('video_list/', views.VideoListView.as_view(), name='video_list'),
+    path('video_edit/<int:pk>/', views.VideoEditView.as_view(), name='video_edit'),
 ]
