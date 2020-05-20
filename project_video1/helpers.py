@@ -1,5 +1,8 @@
 
 from django.http import HttpResponseBadRequest, HttpResponse
+from django.views import View
+from django.core.exceptions import PermissionDenied
+
 
 def get_page_list(paginator, page):
     page_list = []
@@ -32,3 +35,11 @@ def ajax_required(f):
     wrap.__doc__ = f.__doc__
     wrap.__name__ = f.__name__
     return wrap
+
+
+class AuthorRequiredMixin(View):
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj != self.request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
